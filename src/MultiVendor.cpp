@@ -49,9 +49,20 @@ SET
 #define GOSSIP_TEXT_BROWSE_ARMOR_264            "|TInterface/ICONS/inv_chest_cloth_04:24:24:-18|t[Show me T10 Armor]"
 #define GOSSIP_TEXT_BROWSE_ACCESSORIES_264      "|TInterface/ICONS/Inv_jewelry_ring_85:24:24:-18|t[Show me off set pieces]"
 //245 -------------------------------------
-#define GOSSIP_TEXT_BROWSE_WEAPONS_245          "|TInterface/ICONS/Inv_mace_116:24:24:-18|t[Let me browse your Weapons]"
-#define GOSSIP_TEXT_BROWSE_ARMOR_245            "|TInterface/ICONS/inv_chest_cloth_04:24:24:-18|t[Show me T9 Armor please]"
-#define GOSSIP_TEXT_BROWSE_ACCESSORIES_245      "|TInterface/ICONS/Inv_jewelry_ring_85:24:24:-18|t[Show me off set pieces]"
+#define GOSSIP_TEXT_BROWSE_WEAPONS_245          "|TInterface/ICONS/Inv_mace_116:24:24:-18|t[245武器]"
+#define GOSSIP_TEXT_BROWSE_ARMOR_245            "|TInterface/ICONS/inv_chest_cloth_04:24:24:-18|t[245护甲]"
+#define GOSSIP_TEXT_BROWSE_OTHER_245            "|TInterface/ICONS/inv_chest_cloth_04:24:24:-18|t[245其他]"
+
+#define GOSSIP_TEXT_BROWSE_WEAPONS_226          "|TInterface/ICONS/Inv_mace_116:24:24:-18|t[226武器]"
+#define GOSSIP_TEXT_BROWSE_ARMOR_226            "|TInterface/ICONS/inv_chest_cloth_04:24:24:-18|t[226护甲]"
+#define GOSSIP_TEXT_BROWSE_OTHER_226            "|TInterface/ICONS/inv_chest_cloth_04:24:24:-18|t[226其他]"
+
+#define GOSSIP_TEXT_BROWSE_WEAPONS_232          "|TInterface/ICONS/Inv_mace_116:24:24:-18|t[232武器]"
+#define GOSSIP_TEXT_BROWSE_ARMOR_232            "|TInterface/ICONS/inv_chest_cloth_04:24:24:-18|t[232护甲1]"
+#define GOSSIP_TEXT_BROWSE_ARMOR2_232           "|TInterface/ICONS/inv_chest_cloth_04:24:24:-18|t[232护甲2]"
+#define GOSSIP_TEXT_BROWSE_OTHER_232            "|TInterface/ICONS/inv_chest_cloth_04:24:24:-18|t[232其他]"
+
+#define GOSSIP_TEXT_BROWSE_239                  "|TInterface/ICONS/Inv_mace_116:24:24:-18|t[239装备]"
 
 //npc_vendor database
 enum shop_list_id
@@ -68,9 +79,19 @@ enum shop_list_id
 
     // 245
     VENDOR_WEAPON_LIST_245 =  6666672, 
-    VENDOR_ARMOR_LIST_245 =  6666673, 
-    VENDOR_ACCESSOIRES_LIST_245 = 6666674
+    VENDOR_ARMOR_LIST_245 = 6666673,
+    VENDOR_OTHER_LIST_245 =  6666674,
 
+    VENDOR_WEAPON_LIST_226 = 6666675,
+    VENDOR_ARMOR_LIST_226 = 6666676,
+    VENDOR_OTHER_LIST_226 = 6666677,
+
+    VENDOR_WEAPON_LIST_232 = 6666678,
+    VENDOR_ARMOR_LIST_232 = 6666679,
+    VENDOR_ARMOR2_LIST_232 = 6666680,
+    VENDOR_OTHER_LIST_232 = 6666681,
+
+    VENDOR_WEAPON_239 = 6666682,
 };
 
 
@@ -218,10 +239,22 @@ public:
 
     bool OnGossipHello(Player* player, Creature* creature) override
     { 
-        if (creature->IsVendor())
+        if (creature->IsVendor()) {
             AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_WEAPONS_245, GOSSIP_ACTION_TRADE, 1);
             AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_ARMOR_245, GOSSIP_ACTION_TRADE, 2);
-            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_ACCESSORIES_245, GOSSIP_ACTION_TRADE, 3);
+            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_OTHER_245, GOSSIP_ACTION_TRADE, 3);
+
+            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_WEAPONS_226, GOSSIP_ACTION_TRADE, 4);
+            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_ARMOR_226, GOSSIP_ACTION_TRADE, 5);
+            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_OTHER_226, GOSSIP_ACTION_TRADE, 6);
+
+            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_WEAPONS_232, GOSSIP_ACTION_TRADE, 7);
+            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_ARMOR_232, GOSSIP_ACTION_TRADE, 8);
+            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_ARMOR2_232, GOSSIP_ACTION_TRADE, 9);
+            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_OTHER_232, GOSSIP_ACTION_TRADE, 10);
+
+            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_239, GOSSIP_ACTION_TRADE, 11);
+        }
 
         SendGossipMenuFor(player, player->GetGossipTextId(creature), creature->GetGUID());
         return true;
@@ -259,7 +292,7 @@ public:
                player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_ARMOR_LIST_245);
              }
              break;
-         case 3: // ACCESSORIES
+         case 3:
              CloseGossipMenuFor(player);
              if (player->IsInCombat())
              {
@@ -269,7 +302,111 @@ public:
              }
              else if (player->getClassMask())
              {
-                player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_ACCESSOIRES_LIST_245);
+                 player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_OTHER_LIST_245);
+             }
+             break;
+         case 4:
+             CloseGossipMenuFor(player);
+             if (player->IsInCombat())
+             {
+                 CloseGossipMenuFor(player);
+                 player->GetSession()->SendNotification("You are in combat!");
+                 return false;
+             }
+             else if (player->getClassMask())
+             {
+                 player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_WEAPON_LIST_226);
+             }
+             break;
+         case 5:
+             CloseGossipMenuFor(player);
+             if (player->IsInCombat())
+             {
+                 CloseGossipMenuFor(player);
+                 player->GetSession()->SendNotification("You are in combat!");
+                 return false;
+             }
+             else if (player->getClassMask())
+             {
+                 player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_ARMOR_LIST_226);
+             }
+             break;
+         case 6:
+             CloseGossipMenuFor(player);
+             if (player->IsInCombat())
+             {
+                 CloseGossipMenuFor(player);
+                 player->GetSession()->SendNotification("You are in combat!");
+                 return false;
+             }
+             else if (player->getClassMask())
+             {
+                 player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_OTHER_LIST_226);
+             }
+             break;
+         case 7:
+             CloseGossipMenuFor(player);
+             if (player->IsInCombat())
+             {
+                 CloseGossipMenuFor(player);
+                 player->GetSession()->SendNotification("You are in combat!");
+                 return false;
+             }
+             else if (player->getClassMask())
+             {
+                 player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_WEAPON_LIST_232);
+             }
+             break;
+         case 8:
+             CloseGossipMenuFor(player);
+             if (player->IsInCombat())
+             {
+                 CloseGossipMenuFor(player);
+                 player->GetSession()->SendNotification("You are in combat!");
+                 return false;
+             }
+             else if (player->getClassMask())
+             {
+                 player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_ARMOR_LIST_232);
+             }
+             break;
+         case 9:
+             CloseGossipMenuFor(player);
+             if (player->IsInCombat())
+             {
+                 CloseGossipMenuFor(player);
+                 player->GetSession()->SendNotification("You are in combat!");
+                 return false;
+             }
+             else if (player->getClassMask())
+             {
+                 player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_ARMOR2_LIST_232);
+             }
+             break;
+         case 10:
+             CloseGossipMenuFor(player);
+             if (player->IsInCombat())
+             {
+                 CloseGossipMenuFor(player);
+                 player->GetSession()->SendNotification("You are in combat!");
+                 return false;
+             }
+             else if (player->getClassMask())
+             {
+                 player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_OTHER_LIST_232);
+             }
+             break;
+         case 11:
+             CloseGossipMenuFor(player);
+             if (player->IsInCombat())
+             {
+                 CloseGossipMenuFor(player);
+                 player->GetSession()->SendNotification("You are in combat!");
+                 return false;
+             }
+             else if (player->getClassMask())
+             {
+                 player->GetSession()->SendListInventory(creature->GetGUID(), VENDOR_WEAPON_239);
              }
              break;
         }
